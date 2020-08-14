@@ -1,0 +1,11 @@
+venv/
+*.pyc
+*.egg-info/
+dist/
+settings.cfg
+*.log*
+env.py
+env_testing.py
+.coverage
+*.sqlite
+.pytest_cache
