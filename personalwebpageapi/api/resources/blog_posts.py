@@ -78,13 +78,13 @@ class BlogPosts(Resource):
         }
 
     @auth.login_required
-    def put(self, post_id):
+    def put(self, post_id=None):
         parser = reqparse.RequestParser()
 
-        parser.add_argument('title')
-        parser.add_argument('image')
-        parser.add_argument('abstract')
-        parser.add_argument('text')
+        parser.add_argument('title', store_missing=False)
+        parser.add_argument('image', store_missing=False)
+        parser.add_argument('abstract', store_missing=False)
+        parser.add_argument('text', store_missing=False)
 
         args = parser.parse_args(strict=True)
 
@@ -95,16 +95,13 @@ class BlogPosts(Resource):
 
         post_content = PostContent.find(post.post_content_id)
 
-        if not post_content:
-            abort(HTTPStatus.NOT_FOUND)
+        if 'text' in args:
+            post_content.text = args.get('text')
+            post_content.save()
+
+            args.pop('text', None)
 
         for key in args:
-            if key == 'text':
-                post_content.text = args.get(key)
-                post_content.save()
-
-                continue
-
             setattr(post, key, args.get(key))
 
         post.save()
@@ -115,7 +112,7 @@ class BlogPosts(Resource):
         }
 
     @auth.login_required
-    def delete(self, post_id):
+    def delete(self, post_id=None):
         post = Post.find(post_id)
 
         if not post:
