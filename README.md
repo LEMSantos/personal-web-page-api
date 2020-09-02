@@ -61,7 +61,7 @@ docker-compose exec dev python -m personalwebpageapi
 
 ## Features
 
-* TODO
+* todo
 
 ## Credits
 * Lucas Eliaquim <lucas_m-santos@hotmail.com>
