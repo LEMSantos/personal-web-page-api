@@ -16,6 +16,8 @@ RUN pip install setuptools wheel cython
 
 ADD . ./
 
+COPY env.example.py env.py
+
 RUN pip install -r requirements.txt
 
 RUN orator migrate -c config/database.py
