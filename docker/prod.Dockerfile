@@ -17,3 +17,9 @@ RUN pip install setuptools wheel cython
 COPY requirements.txt ./
 
 RUN pip install -r requirements.txt
+
+COPY env.example.py env.py
+
+RUN orator migrate
+
+RUN python -m personalwebpageapi token --create
