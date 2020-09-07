@@ -18,8 +18,8 @@ COPY requirements.txt ./
 
 RUN pip install -r requirements.txt
 
-COPY env.example.py env.py
+ADD config ./config
 
-RUN orator migrate -c database.py
+RUN orator migrate -c config/database.py
 
 RUN python -m personalwebpageapi token --create
