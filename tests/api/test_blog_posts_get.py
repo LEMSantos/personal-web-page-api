@@ -60,6 +60,7 @@ def test_get_paginated_posts_empty_database(client):
 
 def test_get_paginated_posts_successfully(client):
     posts = factory(Post, 7).create()
+    factory(Post, 'is_draft', 2).create()
 
     response = client.get(
         '/posts',
