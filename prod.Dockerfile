@@ -14,10 +14,8 @@ RUN apt-get install -y gnupg \
 
 RUN pip install setuptools wheel cython
 
-COPY requirements.txt ./
+ADD . ./
 
 RUN pip install -r requirements.txt
-
-ADD config ./config
 
 RUN orator migrate -c config/database.py
