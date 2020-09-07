@@ -2,4 +2,4 @@ build:
   docker:
     web: prod.Dockerfile
 run:
-  web: python -m personalwebpageapi
+  web: waitress-serve --port=$PORT personalwebpageapi.api:app
