@@ -1,5 +1,5 @@
 build:
   docker:
-    web: docker/prod.Dockerfile
+    web: prod.Dockerfile
 run:
   web: python -m personalwebpageapi
