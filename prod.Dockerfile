@@ -21,5 +21,3 @@ RUN pip install -r requirements.txt
 ADD config ./config
 
 RUN orator migrate -c config/database.py
-
-RUN python -m personalwebpageapi token --create
