@@ -35,9 +35,12 @@ class BlogPosts(Resource):
 
             args = parser.parse_args()
 
-            posts = Post.paginate(
-                self.per_page,
-                args.get('page'),
+            posts = (Post
+                .where('is_draft', False)
+                .paginate(
+                    self.per_page,
+                    args.get('page'),
+                )
             )
 
             return {
@@ -58,6 +61,7 @@ class BlogPosts(Resource):
         parser.add_argument('image', required=True)
         parser.add_argument('abstract', required=True)
         parser.add_argument('text', required=True)
+        parser.add_argument('is_draft', type=bool)
 
         args = parser.parse_args(strict=True)
 
@@ -70,6 +74,7 @@ class BlogPosts(Resource):
         post.image = args.get('image')
         post.abstract = args.get('abstract')
         post.post_content_id = post_content.id
+        post.is_draft = False
         post.save()
 
         return {
@@ -85,6 +90,7 @@ class BlogPosts(Resource):
         parser.add_argument('image', store_missing=False)
         parser.add_argument('abstract', store_missing=False)
         parser.add_argument('text', store_missing=False)
+        parser.add_argument('is_draft', type=bool, store_missing=False)
 
         args = parser.parse_args(strict=True)
 

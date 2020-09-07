@@ -8,7 +8,8 @@ class BlogLatestPosts(Resource):
 
     def get(self):
         posts = Post \
-            .all() \
+            .where('is_draft', False) \
+            .get() \
             .sort(lambda item: item.created_at) \
             .reverse() \
             .take(self.latest_posts_limit)

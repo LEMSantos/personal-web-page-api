@@ -4,32 +4,40 @@ from tests.factories import factory
 from http import HTTPStatus
 
 
-def test_get_single_post_nonexistent_id(client):
-    response = client.get(
-        '/posts/365654',
-    )
-
-    assert response.status_code == HTTPStatus.NOT_FOUND
-
-
-def test_get_single_post_successfully(client):
-    post_content = factory(PostContent).create()
-    post = factory(Post).create(post_content_id=post_content.id)
-
-    response = client.get(
-        f'/posts/{post.id}',
-    )
-
-    assert response.status_code == HTTPStatus.OK
-    assert response.get_json() == {
-        **post.serialize(),
-        'text': post_content.text,
+def test_blog_posts_with_drafts_get_without_token(client):
+    headers = {
+        'Authorization': 'Bearer',
     }
+
+    response = client.get(
+        '/all-posts',
+        query_string='p=1',
+        headers=headers,
+    )
+
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+
+
+def test_blog_posts_with_drafts_get_invalid_token(client):
+    headers = {
+        'Authorization': 'Bearer invalid_token',
+    }
+
+    response = client.get(
+        '/all-posts',
+        query_string='p=1',
+        headers=headers,
+    )
+
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
 
 
 def test_get_paginated_posts_without_page_param(client):
     response = client.get(
-        '/posts',
+        '/all-posts',
+        headers={
+            'Authorization': 'Bearer valid_token',
+        },
     )
 
     assert response.status_code == HTTPStatus.BAD_REQUEST
@@ -42,8 +50,11 @@ def test_get_paginated_posts_without_page_param(client):
 
 def test_get_paginated_posts_empty_database(client):
     response = client.get(
-        '/posts',
+        '/all-posts',
         query_string='p=1',
+        headers={
+            'Authorization': 'Bearer valid_token',
+        },
     )
 
     assert response.status_code == HTTPStatus.OK
@@ -63,8 +74,11 @@ def test_get_paginated_posts_successfully(client):
     factory(Post, 'is_draft', 2).create()
 
     response = client.get(
-        '/posts',
+        '/all-posts',
         query_string='p=1',
+        headers={
+            'Authorization': 'Bearer valid_token',
+        },
     )
 
     data = response.get_json()
@@ -72,7 +86,7 @@ def test_get_paginated_posts_successfully(client):
 
     assert response.status_code == HTTPStatus.OK
     assert data.items() >= {
-        'total': 7,
+        'total': 9,
         'per_page': 6,
         'current_page': 1,
         'last_page': 2,

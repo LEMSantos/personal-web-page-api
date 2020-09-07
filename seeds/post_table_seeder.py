@@ -15,10 +15,19 @@ class PostTableSeeder(Seeder):
             )
 
             self.db.table('posts').insert(
-                self.posts_factory(_id),
+                self.posts_factory(_id, False),
             )
 
-    def posts_factory(self, _id):
+        for i in range(10):
+            _id = self.db.table('post_contents').insert_get_id(
+                self.post_content_factory(),
+            )
+
+            self.db.table('posts').insert(
+                self.posts_factory(_id, True),
+            )
+
+    def posts_factory(self, _id, is_draft):
         fake = Faker()
 
         return {
@@ -26,6 +35,7 @@ class PostTableSeeder(Seeder):
             'image': 'https://source.unsplash.com/random/1600x900',
             'abstract': fake.paragraph(),
             'post_content_id': _id,
+            'is_draft': is_draft,
         }
 
     def post_content_factory(self):

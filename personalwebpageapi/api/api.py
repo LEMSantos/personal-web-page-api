@@ -5,6 +5,7 @@ from flask_limiter import Limiter, HEADERS
 from flask_limiter.util import get_remote_address
 from personalwebpageapi.api.resources import BlogPosts
 from personalwebpageapi.api.resources import BlogLatestPosts
+from personalwebpageapi.api.resources import BlogPostsWithDrafts
 
 app = Flask(__name__)
 
@@ -32,4 +33,9 @@ api.add_resource(
 api.add_resource(
     BlogLatestPosts,
     '/latest-posts',
+)
+
+api.add_resource(
+    BlogPostsWithDrafts,
+    '/all-posts',
 )

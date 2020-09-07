@@ -13,6 +13,7 @@ class CreatePostTable(Migration):
             table.string('image')
             table.string('abstract')
             table.integer('post_content_id')
+            table.boolean('is_draft').default(False)
             table.soft_deletes()
             table.timestamps()
 
